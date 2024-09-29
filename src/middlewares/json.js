@@ -1,4 +1,3 @@
-import Buffer from 'node:buffer';
 
 export default async function json(req, res){
     const buffers = [];
@@ -7,10 +6,8 @@ export default async function json(req, res){
         buffers.push(chunk);
     }
 
-    const data = Buffer.concat(buffers).toString();
-
     try {
-        req.body = JSON.parse(data);
+        req.body = JSON.parse(Buffer.concat(buffers).toString());
     } catch (error) {
         req.body = null;
     }
