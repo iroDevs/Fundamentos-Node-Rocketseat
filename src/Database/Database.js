@@ -1,5 +1,6 @@
 import fs from 'fs';
 
+
 export default class Database {
 
     constructor(){
@@ -43,9 +44,9 @@ export default class Database {
         dataJson[table].splice(index, 1);
         this.writeDataBase(dataJson);
     }
-
-
 }
+
+
 
 
   /*

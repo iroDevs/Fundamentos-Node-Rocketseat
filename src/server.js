@@ -1,9 +1,13 @@
 import http from 'node:http';
 import  taskRoutes  from './Routes/Task.js';
+import Database from './Database/Database.js';
+import json from './middlewares/json.js';
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
     const { url, method } = req;
-    console.log(url, method);
+    const database = new Database();
+
+    await json(req, res);
 
     const route = taskRoutes.find(route => {
         const { path, method: routeMethod } = route;
@@ -12,7 +16,7 @@ const server = http.createServer((req, res) => {
     });
 
     if (route) {
-        return route.handler(req, res);
+        return route.handler(req, res, database);
     }
 
     res.writeHead(404, { 'Content-Type': 'application/json' });
