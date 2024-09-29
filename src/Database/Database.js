@@ -4,9 +4,13 @@ import fs from 'fs';
 export default class Database {
 
     constructor(){
+        console.log("entrei 1");
+
         //cria o arquivo database.json se ele não existir
         if (!fs.existsSync('database.json')) {
-            this.writeDataBase({});
+            console.log("entrei 2");
+
+            this.writeDataBase({tasks: []});
         }
     }
 

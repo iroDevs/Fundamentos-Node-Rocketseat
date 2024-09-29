@@ -2,10 +2,11 @@ import http from 'node:http';
 import  taskRoutes  from './Routes/Task.js';
 import Database from './Database/Database.js';
 import json from './middlewares/json.js';
+const database = new Database();
 
 const server = http.createServer(async (req, res) => {
     const { url, method } = req;
-    const database = new Database();
+
 
     await json(req, res);
 
