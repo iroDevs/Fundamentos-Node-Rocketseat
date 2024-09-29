@@ -4,12 +4,10 @@ import fs from 'fs';
 export default class Database {
 
     constructor(){
-        console.log("entrei 1");
+
 
         //cria o arquivo database.json se ele não existir
         if (!fs.existsSync('database.json')) {
-            console.log("entrei 2");
-
             this.writeDataBase({tasks: []});
         }
     }
@@ -22,14 +20,31 @@ export default class Database {
     getDataByTableName(table) {
         const data = fs.readFileSync('database.json');
         const dataJson = JSON.parse(data);
+
         return dataJson[table];
+    }
+
+    //método para buscar um registro no arquivo database.json
+    getDataById(table,id) {
+        const data = fs.readFileSync('database.json');
+        const dataJson = JSON.parse(data);
+        return dataJson[table].find(item => item.id === id);
     }
 
     //método para escrever no arquivo database.json
     addDataByTableName(table,data) {
         const dataJson = JSON.parse(fs.readFileSync('database.json'));
         dataJson[table].push(data);
-        arrayJson.push(data);
+        this.writeDataBase(dataJson);
+    }
+
+    //método para marcar uma tarefa como concluída no arquivo database.json
+    markTaskAsCompleted(table,id) {
+        const dataJson = JSON.parse(fs.readFileSync('database.json'));
+        const index = dataJson[table].findIndex(item => item.id === id);
+        console.log(dataJson[table][index]);
+
+        dataJson[table][index].completed_at = new Date().toISOString();
         this.writeDataBase(dataJson);
     }
 
@@ -49,36 +64,3 @@ export default class Database {
         this.writeDataBase(dataJson);
     }
 }
-
-
-
-
-  /*
-    Json file structure:
-    {
-        "table1": [
-            {
-                "id": 1,
-                "name": "name1",
-                "description": "description1"
-            },
-            {
-                "id": 2,
-                "name": "name2",
-                "description": "description2"
-            }
-        ],
-        "table2": [
-            {
-                "id": 1,
-                "name": "name1",
-                "description": "description1"
-            },
-            {
-                "id": 2,
-                "name": "name2",
-                "description": "description2"
-            }
-        ]
-    }
-    */
