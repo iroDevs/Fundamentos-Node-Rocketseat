@@ -1,13 +1,25 @@
-const http = require('http');
+import http from 'node:http';
+import  taskRoutes  from './Routes/Task.js';
 
 const server = http.createServer((req, res) => {
+    const { url, method } = req;
+    console.log(url, method);
 
-    console.log(req);
-    res.setHeader('Content-Type', 'text/html');
-    res.write('<html>');
-    res.write('<head><title>My First Page</title></head>');
-    res.write('<body><h1>Hello from my Node.js Server!</h1></body>');
-    res.write('</html>');
+    const route = taskRoutes.find(route => {
+        const { path, method: routeMethod } = route;
+
+        return path === url && routeMethod === method;
+    });
+
+    if (route) {
+        return route.handler(req, res);
+    }
+
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.write(JSON.stringify({ message: 'Rota não encontrada!' }));
+    return res.end();
+
+
 
 });
 
