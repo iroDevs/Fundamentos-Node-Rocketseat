@@ -2,13 +2,20 @@ import http from 'node:http';
 import  taskRoutes  from './Routes/Task.js';
 import Database from './Database/Database.js';
 import json from './middlewares/json.js';
+import csv from './middlewares/csv.js';
+
 const database = new Database();
 
 const server = http.createServer(async (req, res) => {
     const { url, method } = req;
 
     try {
-        await json(req, res);
+
+        if (req.headers['content-type'] === 'application/json') {
+            await json(req, res);
+        } else if (req.headers['content-type'] === 'multipart/form-data') {
+            await csv(req, res);
+        }
 
     const route = taskRoutes.find(route => {
         const { path, method: routeMethod } = route;

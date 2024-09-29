@@ -17,8 +17,6 @@ const routes = [
         path: buildPathRoute('/tasks/:id'),
         handler: (req, res, database) => {
             const { id } = req.params;
-            console.log(id);
-
             const task = database.getDataById('tasks', id);
 
             res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -74,6 +72,32 @@ const routes = [
 
             res.writeHead(201, { 'Content-Type': 'application/json' });
             return res.end(JSON.stringify({ message: 'Task criada com sucesso!' }));
+
+        }
+    },
+    {
+        method: 'POST',
+        path: buildPathRoute('/tasks/import'),
+        handler: (req, res, database) => {
+
+            const arrayNewTasks = req.body;
+
+
+
+            arrayNewTasks.forEach(task => {
+                console.log(task);
+                const newTask = {
+                    id: randomUUID(),
+                    title: task['title'],
+                    description: task['description'],
+                    completed_at: null,
+                    updated_at: null,
+                };
+                database.addDataByTableName('tasks', newTask);
+            });
+
+            res.writeHead(201, { 'Content-Type': 'application/json' });
+            return res.end(JSON.stringify({ message: 'Importação realizada com sucesso!' }));
 
         }
     },
