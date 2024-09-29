@@ -1,13 +1,29 @@
-const http = require('http');
+import http from 'node:http';
+import  taskRoutes  from './Routes/Task.js';
+import Database from './Database/Database.js';
+import json from './middlewares/json.js';
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
+    const { url, method } = req;
+    const database = new Database();
 
-    console.log(req);
-    res.setHeader('Content-Type', 'text/html');
-    res.write('<html>');
-    res.write('<head><title>My First Page</title></head>');
-    res.write('<body><h1>Hello from my Node.js Server!</h1></body>');
-    res.write('</html>');
+    await json(req, res);
+
+    const route = taskRoutes.find(route => {
+        const { path, method: routeMethod } = route;
+
+        return path === url && routeMethod === method;
+    });
+
+    if (route) {
+        return route.handler(req, res, database);
+    }
+
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.write(JSON.stringify({ message: 'Rota não encontrada!' }));
+    return res.end();
+
+
 
 });
 

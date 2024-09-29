@@ -1,6 +1,7 @@
 {
   "name": "fundamentos-node-rocketseat",
   "version": "1.0.0",
+  "type": "module",
   "description": "Desafio do modulos de fundamentos",
   "main": "index.js",
   "scripts": {
